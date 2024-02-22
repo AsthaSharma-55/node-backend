@@ -1,0 +1,80 @@
+const express = require('express');
+require("./config");
+const Product = require('./Product');
+const app = express();
+
+app.use(express.json())
+
+// const main = async () => {
+//     // await mongoose.connect('mongodb://localhost:27017/e-com')
+//     const Productmodal = new mongoose.model('Product', productSchema)
+//     let data = new Productmodal({ name: "m8" ,product:"mi",price:500,brand:"mi"})
+//     let result = await data.save()
+//     console.log("resultttttttttt", result)
+// }
+// // main()
+
+// const updateInDB =async  () => {
+//     const Product = mongoose.model('products', productSchema);
+//     let data =await  Product.updateOne(
+//         { name: "m8" },
+//         {
+//             $set: { price: 550,name:'mi pro 6' }
+//         }
+//     )
+//     console.log(data)
+// }
+// updateInDB()
+
+// const deleteInDB = async ()=>{
+//     const Product = mongoose.model('products', productSchema);
+//     let data = await Product.deleteOne({name:'nokia'})
+//     console.log(data);
+// }
+// // deleteInDB()
+ 
+//     const findInDB = async ()=>{
+//     const Product = mongoose.model('products', productSchema);
+//     let data = await Product.find({name:'nokia'})
+//     console.log(data);
+// }
+
+// // findInDB();
+
+//////////////////////////search api//////////////////////////////
+
+app.get('/search/:key', async (req, res) => {
+    console.log(req.params.key)
+    const data = await Product.find({
+        "$or": [
+            {
+                "name": { $regex: req.params.key },              //seach ny name
+                // "brand": { $regex: req.params.key }           // search by letters only
+            }
+        ]
+    })
+    res.send(data)
+})
+app.listen(5000)
+
+
+app.post('/login', async (req, res) => {
+    // let data = await dbConnect()
+    if(req.body.password && req.body.email){
+        let user = await users.findOne(req.body).select('-password')
+        if(user){
+            jwt.sign({user},jwtKey,{expiresIn:"2h"},{err,token})
+            if(err){
+                res.send({result:'somthing went wrong'})
+            }
+            res.send({user,auth:token})
+        }else{
+            res.send({result:"no user found"})
+        }
+    }else{
+        res.send({result:"no user foundd"})
+    }
+   
+    res.send(data)
+    // console.log(data)
+})
